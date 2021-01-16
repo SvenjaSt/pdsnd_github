@@ -67,7 +67,6 @@ pip install notebook
 jupyter notebook
 ```
 
-
 ### Files used
 chicago.csv  
 new_york_city.csv  
@@ -80,3 +79,8 @@ The following sources were consulted:
 **3:** https://stackoverflow.com/questions/50848454/pulling-most-frequent-combination-from-csv-columns  
 **4:** https://stackoverflow.com/questions/43983622/remove-unnamed-columns-in-pandas-dataframe  
 **5:** https://stackoverflow.com/questions/20490274/how-to-reset-index-in-a-pandas-dataframe  
+
+### Log of Updates and Revisions
+The project started in January 2021 considering data for the cities Chicago, New York City and Washington. Currently, no updates have been made.
+
+An extension of the project to include data from other cities is being considered.
