@@ -101,55 +101,55 @@ def load_data(city, month, day):
         (str) month - name of the month to filter by, or "all" to apply no month filter
         (str) day - name of the day of week to filter by, or "all" to apply no day filter
     Returns:
-        df - Pandas DataFrame containing city data filtered by month or day or not at all
+        filtered_data - Pandas DataFrame containing city data filtered by month or day or not at all
     """
 
     # load data file into a dataframe
-    df = pd.read_csv(CITY_DATA[city])
+    filtered_data = pd.read_csv(CITY_DATA[city])
 
     # convert the Start Time column to datetime
-    df['Start Time'] = pd.to_datetime(df['Start Time'])
+    filtered_data['Start Time'] = pd.to_datetime(filtered_data['Start Time'])
 
     # extract month from Start Time to create new columns
-    df['month'] = df['Start Time'].dt.month
+    filtered_data['month'] = filtered_data['Start Time'].dt.month
     # extract weekday from Start Time to create new columns
-    df['day_of_week'] = df['Start Time'].dt.weekday_name
+    filtered_data['day_of_week'] = filtered_data['Start Time'].dt.weekday_name
 
     # filter by month if applicable
     if month != 'all':
         # use the index of the months list to get the corresponding int
         month_index = month_list.index(month)+1
         #filter by month to create the new dataframe
-        df = df[df['month'] == month_index]
+        filtered_data = filtered_data[filtered_data['month'] == month_index]
 
 
     # filter by day of week if applicable
     if day != 'all':
         # filter by day of week to create new dataframe
-        df = df[df['day_of_week'] == day.title()]
+        filtered_data = filtered_data[filtered_data['day_of_week'] == day.title()]
 
-    return df
-
-
+    return filtered_data
 
 
-def time_stats(df):
+
+
+def time_stats(filtered_data):
     """Displays statistics on the most frequent times of travel."""
 
     print('\nCalculating The Most Frequent Times of Travel...\n')
     start_time = time.time()
 
     # TO DO: display the most common month
-    month_index = df['month'].mode()[0]-1
+    month_index = filtered_data['month'].mode()[0]-1
     popular_month = month_list[month_index].title()
 
     # TO DO: display the most common day of week
-    popular_day_of_week = df['day_of_week'].mode()[0]
+    popular_day_of_week = filtered_data['day_of_week'].mode()[0]
 
     # extract hour from Start Time to create new column
-    df['hour'] = df['Start Time'].dt.hour
+    filtered_data['hour'] = filtered_data['Start Time'].dt.hour
     # TO DO: display the most common start hour
-    popular_hour = df['hour'].mode()[0]
+    popular_hour = filtered_data['hour'].mode()[0]
 
     print('Most popular month: {}\nMost popular weekday: {}\nMost popular hour: {}'.format(popular_month, popular_day_of_week, popular_hour))
 
@@ -158,20 +158,20 @@ def time_stats(df):
     print('-'*40)
     print(' ')
 
-def station_stats(df):
+def station_stats(filtered_data):
     """Displays statistics on the most popular stations and trip."""
 
     print('\nCalculating The Most Popular Stations and Trip...\n')
     start_time = time.time()
 
     # TO DO: display most commonly used start station
-    popular_start_station = df['Start Station'].mode()[0]
+    popular_start_station = filtered_data['Start Station'].mode()[0]
 
     # TO DO: display most commonly used end station
-    popular_end_station = df['End Station'].mode()[0]
+    popular_end_station = filtered_data['End Station'].mode()[0]
 
     # TO DO: display most frequent combination of start station and end station trip
-    popular_start_end_station = df.groupby(['Start Station','End Station']).size().nlargest(1)
+    popular_start_end_station = filtered_data.groupby(['Start Station','End Station']).size().nlargest(1)
 
     print('Most commonly used Start Station: {}\nMost commonly used End Station: {}\nMost frequent combination of Start and End Station:\n{}'.format(popular_start_station, popular_end_station, popular_start_end_station))
 
@@ -179,17 +179,17 @@ def station_stats(df):
     print('-'*40)
     print(' ')
 
-def trip_duration_stats(df):
+def trip_duration_stats(filtered_data):
     """Displays statistics on the total and average trip duration."""
 
     print('\nCalculating Trip Duration...\n')
     start_time = time.time()
 
     # TO DO: display total travel time
-    total_travel_time = df['Trip Duration'].sum()
+    total_travel_time = filtered_data['Trip Duration'].sum()
 
     # TO DO: display mean travel time
-    mean_travel_time = df['Trip Duration'].mean()
+    mean_travel_time = filtered_data['Trip Duration'].mean()
 
     print('Total travel time: {}\nMean travel time: {}'.format(total_travel_time, mean_travel_time))
 
@@ -198,37 +198,37 @@ def trip_duration_stats(df):
     print(' ')
 
 
-def user_stats(df, city):
+def user_stats(filtered_data, city):
     """Displays statistics on bikeshare users."""
 
     print('\nCalculating User Stats...\n')
     start_time = time.time()
 
     # TO DO: Display counts of user types
-    counts_user_types = df['User Type'].value_counts()
+    counts_user_types = filtered_data['User Type'].value_counts()
     print('Count of user type:\n{}\n'.format(counts_user_types))
 
     # TO DO: Display counts of gender
     if city == 'washington':
         print('Unfortunately, there are no gender data available for Washington.')
     else:
-        counts_gender = df['Gender'].value_counts()
+        counts_gender = filtered_data['Gender'].value_counts()
         print('The count of gender for the given data is:\n{}\n'.format(counts_gender))
 
     # TO DO: Display earliest, most recent, and most common year of birth
     if city == 'washington':
         print('Unfortunately, there are no year of birth data available for Washington.')
     else:
-        earliest_birth_year = df['Birth Year'].min()
-        most_recent_birth_year = df['Birth Year'].max()
-        most_common_birth_year = df['Birth Year'].value_counts().idxmax()
+        earliest_birth_year = filtered_data['Birth Year'].min()
+        most_recent_birth_year = filtered_data['Birth Year'].max()
+        most_common_birth_year = filtered_data['Birth Year'].value_counts().idxmax()
         print('Earliest year of birth: {}\n Most recent year of birth: {}\nMost common year of birth: {}'.format(int(earliest_birth_year), int(most_recent_birth_year), int(most_common_birth_year)))
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
     print(' ')
 
-def display_raw_data(df):
+def display_raw_data(filtered_data):
     """Displays raw data at the request of the user."""
 
     count_lines = 5
@@ -239,7 +239,7 @@ def display_raw_data(df):
             print('{} is no valid input.'.format(display_raw_data))
             continue
         elif display_raw_data == 'yes':
-            print(df.head(count_lines).drop('Unnamed: 0', axis = 1).reset_index(drop = True))
+            print(filtered_data.head(count_lines).drop('Unnamed: 0', axis = 1).reset_index(drop = True))
             count_lines += 5
             break
         else:
@@ -252,7 +252,7 @@ def display_raw_data(df):
                 print('{} is no valid input.'.format(more_raw_data))
                 continue
             elif more_raw_data == 'yes':
-                print(df.head(count_lines).drop('Unnamed: 0', axis = 1).reset_index(drop = True))
+                print(filtered_data.head(count_lines).drop('Unnamed: 0', axis = 1).reset_index(drop = True))
                 count_lines += 5
                 continue
             else:
@@ -266,14 +266,14 @@ def display_raw_data(df):
 def main():
     while True:
         city, month, day = get_filters()
-        df = load_data(city, month, day)
+        filtered_data = load_data(city, month, day)
 
-        time_stats(df)
-        station_stats(df)
-        trip_duration_stats(df)
-        user_stats(df, city)
+        time_stats(filtered_data)
+        station_stats(filtered_data)
+        trip_duration_stats(filtered_data)
+        user_stats(filtered_data, city)
 
-        display_raw_data(df)
+        display_raw_data(filtered_data)
 
         restart = input('\nWould you like to restart? Enter "yes" or "no".\n')
         if restart.lower() != 'yes':
